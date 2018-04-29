@@ -1,6 +1,7 @@
 package com.udacity.gradle.builditbigger;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -18,6 +19,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if(BuildConfig.FLAVOR.equals("free")) {
+            setTitle(getString(R.string.app_name) + " " + getString(R.string.free));
+        } else if(BuildConfig.FLAVOR.equals("paid")) {
+            setTitle(getString(R.string.app_name) + " " + getString(R.string.paid));
+        }
     }
 
 
