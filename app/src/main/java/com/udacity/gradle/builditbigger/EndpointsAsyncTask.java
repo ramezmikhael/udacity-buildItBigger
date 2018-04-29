@@ -12,23 +12,30 @@ import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import com.udacity.gradle.builditbigger.backend.myApi.MyApi;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 
 /**
  * Created by RamezReda on 4/28/2018.
  */
 
+/*
+ * I would use AsyncTaskLoader instead but the rubric says AsyncTask!
+ */
 class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
     private static MyApi myApiService = null;
-    private Context context;
+    private WeakReference<Context> context;
+
+    private final PostExecuteListener mListener;
+
+    public EndpointsAsyncTask(PostExecuteListener listener) {
+        mListener = listener;
+    }
 
     @Override
     protected String doInBackground(Context... params) {
-        if(myApiService == null) {  // Only do this once
+        if(myApiService == null) {
             MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)
-                    // options for running against local devappserver
-                    // - 10.0.2.2 is localhost's IP address in Android emulator
-                    // - turn off compression when running against local devappserver
                     .setRootUrl("http://10.0.2.2:8080/_ah/api/")
                     .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
                         @Override
@@ -36,12 +43,11 @@ class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
                             abstractGoogleClientRequest.setDisableGZipContent(true);
                         }
                     });
-            // end options for devappserver
 
             myApiService = builder.build();
         }
 
-        context = params[0];
+        context = new WeakReference<>(params[0]);
 
         try {
             return myApiService.getJoke().execute().getData();
@@ -52,8 +58,14 @@ class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        Intent intent = new Intent(context, JokeActivity.class);
+        mListener.executeFinished();
+
+        Intent intent = new Intent(context.get(), JokeActivity.class);
         intent.putExtra(JokeActivity.ARG_JOKE, result);
-        context.startActivity(intent);
+        context.get().startActivity(intent);
+    }
+
+    public interface PostExecuteListener {
+        void executeFinished();
     }
 }

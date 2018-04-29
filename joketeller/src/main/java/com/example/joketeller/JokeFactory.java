@@ -7,7 +7,7 @@ public class JokeFactory {
     /*
     Jokes list come from http://www.short-funny.com/
      */
-    private String[] jokes = new String[] {
+    private final String[] jokes = new String[] {
             "Can a kangaroo jump higher than a house? \n" +
                     "-\n" +
                     "Of course, a house doesn't jump at all.",
