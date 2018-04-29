@@ -1,5 +1,6 @@
 package com.udacity.gradle.builditbigger;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -7,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
+
+import com.example.jokedisplay.JokeActivity;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -41,7 +44,11 @@ public class MainActivityFragment extends Fragment implements EndpointsAsyncTask
     }
 
     @Override
-    public void executeFinished() {
+    public void executeFinished(String result) {
         progressBar.setVisibility(View.GONE);
+
+        Intent intent = new Intent(getActivity(), JokeActivity.class);
+        intent.putExtra(JokeActivity.ARG_JOKE, result);
+        getActivity().startActivity(intent);
     }
 }

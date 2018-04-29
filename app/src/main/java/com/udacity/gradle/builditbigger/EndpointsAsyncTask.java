@@ -1,10 +1,8 @@
 package com.udacity.gradle.builditbigger;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 
-import com.example.jokedisplay.JokeActivity;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
@@ -58,14 +56,10 @@ class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        mListener.executeFinished();
-
-        Intent intent = new Intent(context.get(), JokeActivity.class);
-        intent.putExtra(JokeActivity.ARG_JOKE, result);
-        context.get().startActivity(intent);
+        mListener.executeFinished(result);
     }
 
     public interface PostExecuteListener {
-        void executeFinished();
+        void executeFinished(String result);
     }
 }

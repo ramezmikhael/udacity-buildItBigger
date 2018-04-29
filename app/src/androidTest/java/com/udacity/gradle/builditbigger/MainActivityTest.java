@@ -1,6 +1,6 @@
 package com.udacity.gradle.builditbigger;
 
-import android.support.test.rule.ActivityTestRule;
+import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Rule;
@@ -9,10 +9,9 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intending;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.not;
 
 /**
  * Created by RamezReda on 4/28/2018.
@@ -21,12 +20,13 @@ import static org.hamcrest.Matchers.not;
 public class MainActivityTest {
 
     @Rule
-    public ActivityTestRule<MainActivity> mainActivityIntentsTestRule =
-            new ActivityTestRule<>(MainActivity.class);
+    public IntentsTestRule<MainActivity> mainActivityIntentsTestRule =
+            new IntentsTestRule<>(MainActivity.class);
 
     @Test
-    public void clickOpenJokeActivityNotEmpty() {
+    public void clickOpensAdTest() {
         onView(withId(R.id.btnTellJoke)).perform(click());
-        onView(withId(R.id.joke_textview)).check(matches(not(withText(""))));
+        intending(hasComponent(com.google.android.gms.ads.AdActivity.class.getName()));
+
     }
 }
